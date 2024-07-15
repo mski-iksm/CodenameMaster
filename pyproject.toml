@@ -9,6 +9,8 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12.2"
 gokart = "*"
+streamlit = "^1.36.0"
+streamlit-paste-button = "^0.1.2"
 
 [build-system]
 requires = ["poetry"]
