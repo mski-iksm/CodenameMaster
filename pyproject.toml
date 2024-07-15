@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "codename_master"
+version = "1.0.0"
+description = "What's this project?"
+authors = ["mski_iksm"]
+license = "MIT License"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12.2"
+gokart = "*"
+
+[build-system]
+requires = ["poetry"]
+build-backend = "poetry.masonry.api"
