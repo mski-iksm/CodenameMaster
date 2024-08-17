@@ -28,7 +28,7 @@ class MakeEstimationTable(gokart.TaskOnKart):
     BLACK_WORD_COEF = -1000.0
     WHITE_WORD_COEF = -0.5
 
-    __version: float = luigi.FloatParameter(default=0.003)
+    __version: float = luigi.FloatParameter(default=0.005)
 
     def requires(self):
         return self.aggregate_scores

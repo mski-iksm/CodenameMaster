@@ -18,6 +18,6 @@ if __name__ == '__main__':
             black_words=black_words,
             white_words=white_words,
         ),
-        log_level=logging.INFO,
+        log_level=logging.ERROR,
     )
     print(result)
