@@ -28,6 +28,8 @@ class MakeEstimationTable(gokart.TaskOnKart):
     BLACK_WORD_COEF = -1000.0
     WHITE_WORD_COEF = -0.5
 
+    __version: float = luigi.FloatParameter(default=0.003)
+
     def requires(self):
         return self.aggregate_scores
 
@@ -56,6 +58,9 @@ class MakeEstimationTable(gokart.TaskOnKart):
         my_score_table['my_score'] = my_score_table['score'] * my_score_table['coef']
         total_scores_by_hint_word = my_score_table.groupby('word')[['my_score']].sum().reset_index()
 
+        total_scores_by_hint_word = cls._remove_english_words(total_scores_by_hint_word)
+
+        # my_scoreが高いhint_wordを取得
         top_hint_words_table = total_scores_by_hint_word.sort_values('my_score', ascending=False).iloc[:20]
         top_hint_words = top_hint_words_table['word'].tolist()
 
@@ -70,6 +75,12 @@ class MakeEstimationTable(gokart.TaskOnKart):
         top_hint_words_table['target_my_words_count'] = target_my_words_count
 
         return DataFrame[EstimationTableSchema](top_hint_words_table)
+
+    @classmethod
+    def _remove_english_words(cls, df: pd.DataFrame) -> pd.DataFrame:
+        # wordが全部英語の場合は除外
+        # 記号や数字も英字とみなす
+        return df[~df['word'].str.match(r'^[a-zA-Z_0-9]+$')]
 
     @classmethod
     def _calc_coef(

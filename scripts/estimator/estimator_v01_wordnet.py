@@ -1,3 +1,5 @@
+import logging
+
 import gokart
 
 from codename_master.runner.estimator_pipeline_v01 import EstimatorPipelineV01
@@ -15,6 +17,7 @@ if __name__ == '__main__':
             opponent_words=opponent_words,
             black_words=black_words,
             white_words=white_words,
-        )
+        ),
+        log_level=logging.INFO,
     )
     print(result)
