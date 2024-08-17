@@ -1,0 +1,2 @@
+class InvalidGPTOutputError(ValueError):
+    pass
