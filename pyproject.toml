@@ -12,6 +12,45 @@ gokart = "*"
 streamlit = "^1.36.0"
 streamlit-paste-button = "^0.1.2"
 
+torch = "==2.2.2"
+easyocr = "^1.7.1"
+numpy = "==1.26.4"
+pydantic = "^2.8.2"
+
+
 [build-system]
-requires = ["poetry"]
-build-backend = "poetry.masonry.api"
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 160
+
+[tool.ruff.lint]
+# All the rules are listed on https://docs.astral.sh/ruff/rules/
+extend-select = [
+  "B", # bugbear
+  "I", # isort
+  "ARG", # flake8-unused-arguments
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"] # imported but unused
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.mypy]
+plugins = "pandera.mypy"
+ignore_missing_imports = true
+strict = true
+# too strict for now
+allow_untyped_calls = true
+allow_untyped_defs = true
+allow_incomplete_defs = true
+disallow_subclassing_any = false # cannot subclass other libralies...
+# we don't use `__all__`
+implicit_reexport = true
+
+[tool.pytest.ini_options]
+testpaths = ["test"]
+addopts = "-s -v --durations=0"
