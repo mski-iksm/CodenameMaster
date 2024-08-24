@@ -10,7 +10,7 @@ from pandera.typing import DataFrame
 from codename_master.guesser.llm.chatgpt_error import InvalidGPTOutputError
 from codename_master.guesser.word_guesser_base import GuessedWordsSchema, WordGuesserBase
 
-client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+client = OpenAI(api_key=os.getenv('OPENAI_API_PERSONAL_KEY'))
 
 
 class ChatGPTConnectionChecker(WordGuesserBase):
@@ -46,6 +46,7 @@ class ChatGPTConnectionChecker(WordGuesserBase):
                 break
             except (InvalidGPTOutputError, json.decoder.JSONDecodeError):
                 continue
+        print(response)
 
         return response
 

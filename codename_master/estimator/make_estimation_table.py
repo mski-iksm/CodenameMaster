@@ -28,7 +28,7 @@ class MakeEstimationTable(gokart.TaskOnKart):
     BLACK_WORD_COEF = -1000.0
     WHITE_WORD_COEF = -0.5
 
-    __version: float = luigi.FloatParameter(default=0.005)
+    __version: float = luigi.FloatParameter(default=0.006)
 
     def requires(self):
         return self.aggregate_scores
@@ -61,6 +61,7 @@ class MakeEstimationTable(gokart.TaskOnKart):
         total_scores_by_hint_word = cls._remove_english_words(total_scores_by_hint_word)
 
         # my_scoreが高いhint_wordを取得
+        print(f'wordnetでの候補数: {len(total_scores_by_hint_word)}')
         top_hint_words_table = total_scores_by_hint_word.sort_values('my_score', ascending=False).iloc[:20]
         top_hint_words = top_hint_words_table['word'].tolist()
 

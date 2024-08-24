@@ -12,7 +12,7 @@ class WordsByColor(BaseModel):
 
 
 def _read_words(image: Image) -> dict[str, list[list[int]]]:
-    reader = easyocr.Reader(['en'])
+    reader = easyocr.Reader(['ja'])
     readtexts = reader.readtext(np.array(image))
     return {readtext[1]: readtext[0] for readtext in readtexts}
 
