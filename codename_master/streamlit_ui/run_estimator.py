@@ -6,15 +6,15 @@ import pandas as pd
 from pandera.typing import DataFrame
 
 from codename_master.estimator.make_estimation_table import EstimationTableSchema
-from codename_master.runner.estimator_pipeline_v02 import EstimatorPipelineV02
+from codename_master.runner.estimator_pipeline_base import EstimatorPipelineBase
 
 
-def _run_task(my_words: list[str], opponent_words: list[str], black_words: list[str], white_words: list[str], return_dict):
-    task = EstimatorPipelineV02
+def _run_task(
+    estimator_pipeline_task: EstimatorPipelineBase, my_words: list[str], opponent_words: list[str], black_words: list[str], white_words: list[str], return_dict
+):
     estimated_table = DataFrame[EstimationTableSchema](
         gokart.build(
-            task(
-                target_words=my_words + opponent_words + black_words + white_words,
+            estimator_pipeline_task(
                 my_words=my_words,
                 opponent_words=opponent_words,
                 black_words=black_words,
@@ -27,7 +27,7 @@ def _run_task(my_words: list[str], opponent_words: list[str], black_words: list[
 
 
 def run_estimator_in_new_process(
-    my_words: list[str], opponent_words: list[str], black_words: list[str], white_words: list[str]
+    estimator_pipeline_task: EstimatorPipelineBase, my_words: list[str], opponent_words: list[str], black_words: list[str], white_words: list[str]
 ) -> DataFrame[EstimationTableSchema]:
     """
     Run gokart task in a new process.
@@ -38,6 +38,7 @@ def run_estimator_in_new_process(
     process = mp.Process(
         target=_run_task,
         kwargs={
+            'estimator_pipeline_task': estimator_pipeline_task,
             'my_words': my_words,
             'opponent_words': opponent_words,
             'black_words': black_words,
@@ -47,9 +48,10 @@ def run_estimator_in_new_process(
     )
     process.start()
     process.join()
-    print(return_dict)
+    returned_dict = dict(return_dict)
+    print(f"""returned_dict: {returned_dict}""")
 
-    returned_df = pd.DataFrame(return_dict)
-    print(returned_df)
+    returned_df = pd.DataFrame.from_dict(returned_dict)
+    print(f"""returned_df: {returned_df}""")
 
     return DataFrame[EstimationTableSchema](returned_df)

@@ -9,7 +9,6 @@ from codename_master.score_aggregator.score_aggregator import AggregateScores
 
 
 class EstimatorPipelineV02(EstimatorPipelineBase):
-    # target_words: list[str] = luigi.ListParameter()
     my_words: list[str] = luigi.ListParameter()
     opponent_words: list[str] = luigi.ListParameter()
     black_words: list[str] = luigi.ListParameter()

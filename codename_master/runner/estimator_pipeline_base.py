@@ -10,9 +10,8 @@ class EstimatedWords(BaseModel):
 
 
 class EstimatorPipelineBase(gokart.TaskOnKart):
-    """EstimatedWordsを返す"""
+    """DataFrame[EstimationTableSchema]を返す"""
 
-    target_words: list[str] = luigi.ListParameter()
     my_words: list[str] = luigi.ListParameter()
     opponent_words: list[str] = luigi.ListParameter()
     black_words: list[str] = luigi.ListParameter()

@@ -2,7 +2,7 @@ import streamlit as st
 from streamlit_paste_button import paste_image_button as pbutton
 
 from codename_master.ocr.read_board import read_board
-from codename_master.runner.estimator_pipeline_v02 import EstimatorPipelineV02
+from codename_master.runner.estimator_pipeline_v01 import EstimatorPipelineV01
 from codename_master.streamlit_ui.run_estimator import run_estimator_in_new_process
 from codename_master.target_words.get_board_words import get_my_words, get_opponent_words
 
@@ -32,7 +32,7 @@ if __name__ == '__main__':
         white_words = words_by_color.white_words
 
         estimated_table = run_estimator_in_new_process(
-            estimator_pipeline_task=EstimatorPipelineV02, my_words=my_words, opponent_words=opponent_words, black_words=black_words, white_words=white_words
+            estimator_pipeline_task=EstimatorPipelineV01, my_words=my_words, opponent_words=opponent_words, black_words=black_words, white_words=white_words
         )
 
         st.subheader('ヒントワード')

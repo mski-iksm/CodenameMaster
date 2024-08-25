@@ -8,7 +8,6 @@ from codename_master.score_aggregator.score_aggregator import AggregateScores
 
 
 class EstimatorPipelineV01(EstimatorPipelineBase):
-    target_words: list[str] = luigi.ListParameter()
     my_words: list[str] = luigi.ListParameter()
     opponent_words: list[str] = luigi.ListParameter()
     black_words: list[str] = luigi.ListParameter()
@@ -16,7 +15,16 @@ class EstimatorPipelineV01(EstimatorPipelineBase):
 
     def requires(self):
         # フィールド単語ごとにヒント単語とスコアを出す
-        hint_guesser_by_word = {target_word: WordNetGuesser(target_word=target_word) for target_word in self.target_words}
+        hint_guesser_by_my_word = {target_word: WordNetGuesser(target_word=target_word) for target_word in self.my_words}
+        hint_guesser_by_opponent_word = {target_word: WordNetGuesser(target_word=target_word) for target_word in self.opponent_words}
+        hint_guesser_by_black_word = {target_word: WordNetGuesser(target_word=target_word) for target_word in self.black_words}
+        hint_guesser_by_white_word = {target_word: WordNetGuesser(target_word=target_word) for target_word in self.white_words}
+        hint_guesser_by_word = {
+            **hint_guesser_by_my_word,
+            **hint_guesser_by_opponent_word,
+            **hint_guesser_by_black_word,
+            **hint_guesser_by_white_word,
+        }
 
         # 全フィールド単語のスコアを集計
         aggregate_scores = AggregateScores(hint_guessers=list(hint_guesser_by_word.values()))

@@ -15,7 +15,6 @@ if __name__ == '__main__':
     result = DataFrame[EstimationTableSchema](
         gokart.build(
             EstimatorPipelineV02(
-                target_words=my_words + opponent_words + black_words + white_words,
                 my_words=my_words,
                 opponent_words=opponent_words,
                 black_words=black_words,
