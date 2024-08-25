@@ -6,6 +6,8 @@ import pandas as pd
 import pandera as pa
 from pandera.typing import DataFrame, Series
 
+HYPER_LINK_TYPES = ['hype', 'hmem', 'hsub', 'hprt']
+
 
 class ConnectedWordsTableSchema(pa.DataFrameModel):
     word: Series[str] = pa.Field()
@@ -16,6 +18,8 @@ class ConnectedWordsTableSchema(pa.DataFrameModel):
 
 class MakeConnectedWordsTable(gokart.TaskOnKart):
     target_word: str = luigi.Parameter()
+
+    __version: float = luigi.FloatParameter(default=0.001)
 
     def run(self):
         self.dump(self._make_connected_words_table(target_word=self.target_word))
@@ -53,11 +57,20 @@ class MakeConnectedWordsTable(gokart.TaskOnKart):
         """)
 
         df = pd.DataFrame(cur.fetchall(), columns=['link_hop1', 'lemma1', 'link_hop2', 'lemma2', 'link_hop3', 'lemma3'])
-        df.loc[df['link_hop2'] != 'hype', ['link_hop3', 'lemma3']] = None
-        df.loc[df['link_hop1'] != 'hype', ['link_hop2', 'lemma2', 'link_hop3', 'lemma3']] = None
+        df.loc[~df['link_hop2'].isin(HYPER_LINK_TYPES), ['link_hop3', 'lemma3']] = None
+        df.loc[~df['link_hop1'].isin(HYPER_LINK_TYPES), ['link_hop2', 'lemma2', 'link_hop3', 'lemma3']] = None
         df = df.drop_duplicates()
 
         # 最も右のNon-nullを採用
         df['word'] = df['lemma3'].fillna(df['lemma2']).fillna(df['lemma1'])
         df = df.rename(columns={'link_hop1': 'link1', 'link_hop2': 'link2', 'link_hop3': 'link3'})
+
+        # wordが全部英語の場合は除外
+        df = cls._remove_english_words(df)
         return DataFrame[ConnectedWordsTableSchema](df[['word', 'link1', 'link2', 'link3']])
+
+    @classmethod
+    def _remove_english_words(cls, df: pd.DataFrame) -> pd.DataFrame:
+        # wordが全部英語の場合は除外
+        # 記号や数字も英字とみなす
+        return df[~df['word'].str.match(r'^[a-zA-Z_0-9]+$')]

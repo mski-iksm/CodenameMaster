@@ -20,6 +20,8 @@ pandera = "^0.20.3"
 pytest = "^8.3.2"
 openai = "^1.41.0"
 multiprocess = "^0.70.16"
+jupyter = "^1.0.0"
+notebook = "^7.2.1"
 
 
 [build-system]
